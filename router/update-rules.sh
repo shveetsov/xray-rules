@@ -12,12 +12,12 @@ log() {
 }
 
 log "Скачиваем geosite_shvetsov.dat..."
-wget -q --show-progress -O "${GEO_DIR}/geosite_shvetsov.dat.tmp" \
-  "${BASE_URL}/geosite_shvetsov.dat" || { log "ОШИБКА: geosite"; exit 1; }
+curl -fsSL "${BASE_URL}/geosite_shvetsov.dat" -o "${GEO_DIR}/geosite_shvetsov.dat.tmp" \
+  || { log "ОШИБКА: geosite"; exit 1; }
 
 log "Скачиваем geoip_shvetsov.dat..."
-wget -q --show-progress -O "${GEO_DIR}/geoip_shvetsov.dat.tmp" \
-  "${BASE_URL}/geoip_shvetsov.dat" || { log "ОШИБКА: geoip"; exit 1; }
+curl -fsSL "${BASE_URL}/geoip_shvetsov.dat" -o "${GEO_DIR}/geoip_shvetsov.dat.tmp" \
+  || { log "ОШИБКА: geoip"; exit 1; }
 
 # Атомарная замена — только если оба файла скачаны успешно
 mv "${GEO_DIR}/geosite_shvetsov.dat.tmp" "${GEO_DIR}/geosite_shvetsov.dat"
