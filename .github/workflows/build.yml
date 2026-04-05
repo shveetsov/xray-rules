@@ -16,6 +16,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout current repo
@@ -91,3 +93,14 @@ jobs:
         with:
           name: xray-rule-assets
           path: dist
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: latest
+          name: "Latest build"
+          make_latest: true
+          files: |
+            dist/geosite_shvetsov.dat
+            dist/geoip_shvetsov.dat
+            dist/05_routing.json
