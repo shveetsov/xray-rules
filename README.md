@@ -39,15 +39,13 @@ https://github.com/shveetsov/xray-rules/releases/latest/download/05_routing.json
 
 ### Первичная установка (один раз)
 
+Выполнить прямо на роутере в SSH-консоли:
+
 ```sh
-# Скопировать скрипт на роутер
-scp router/update-rules.sh root@192.168.1.1:/opt/etc/xray/update-rules.sh
-
-# Дать права на выполнение
-chmod +x /opt/etc/xray/update-rules.sh
-
-# Запустить вручную — проверить что всё работает
-/opt/etc/xray/update-rules.sh
+curl -fsSL https://raw.githubusercontent.com/shveetsov/xray-rules/main/router/update-rules.sh \
+  -o /opt/etc/xray/update-rules.sh \
+  && chmod +x /opt/etc/xray/update-rules.sh \
+  && /opt/etc/xray/update-rules.sh
 ```
 
 ### Автозапуск по расписанию (cron)
