@@ -1,0 +1,69 @@
+{
+  "routing": {
+    "domainStrategy": "IPIfNonMatch",
+    "rules": [
+      {
+        "type": "field",
+        "inboundTag": ["redirect", "tproxy"],
+        "outboundTag": "block",
+        "network": "udp",
+        "port": "135,137,138,139"
+      },
+      {
+        "type": "field",
+        "inboundTag": ["redirect", "tproxy"],
+        "outboundTag": "block",
+        "domain": [
+          "ext:geosite_v2fly.dat:category-ads-all",
+          "google-analytics",
+          "analytics.yandex",
+          "appcenter.ms",
+          "app-measurement.com",
+          "firebase.io",
+          "crashlytics.com"
+        ]
+      },
+      {
+        "type": "field",
+        "inboundTag": ["redirect", "tproxy"],
+        "outboundTag": "vless-reality",
+        "network": "udp",
+        "port": "50000-50030"
+      },
+      {
+        "type": "field",
+        "inboundTag": ["redirect", "tproxy"],
+        "outboundTag": "vless-reality",
+        "domain": [
+          "ext:geosite_shvetsov.dat:all"
+        ]
+      },
+      {
+        "type": "field",
+        "inboundTag": ["redirect", "tproxy"],
+        "outboundTag": "vless-reality",
+        "ip": [
+          "ext:geoip_shvetsov.dat:all"
+        ]
+      },
+      {
+        "type": "field",
+        "inboundTag": ["redirect", "tproxy"],
+        "outboundTag": "direct",
+        "ip": [
+          "127.0.0.0/8",
+          "10.0.0.0/8",
+          "172.16.0.0/12",
+          "192.168.0.0/16",
+          "169.254.0.0/16"
+        ]
+      },
+      {
+        "type": "field",
+        "inboundTag": ["redirect", "tproxy"],
+        "outboundTag": "direct",
+        "network": "tcp,udp"
+      }
+    ]
+  }
+}

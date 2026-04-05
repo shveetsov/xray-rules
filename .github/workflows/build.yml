@@ -1,0 +1,85 @@
+name: Build Xray rule assets
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - master
+    paths:
+      - 'geosite/data/**'
+      - 'geoip/data/**'
+      - 'router/**'
+      - '.github/workflows/build.yml'
+      - 'README.md'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout current repo
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.22'
+
+      - name: Clone domain-list-community
+        run: |
+          git clone --depth=1 https://github.com/v2fly/domain-list-community.git /tmp/dlc
+
+      - name: Replace data files with custom lists
+        run: |
+          rm -rf /tmp/dlc/data/*
+          mkdir -p /tmp/dlc/data
+          cp geosite/data/* /tmp/dlc/data/
+
+      - name: Build geosite_shvetsov.dat
+        working-directory: /tmp/dlc
+        run: |
+          go run ./ --outputdir=/tmp/output
+          ls -la /tmp/output
+          cp /tmp/output/dlc.dat /tmp/output/geosite_shvetsov.dat
+
+      - name: Clone geoip tool
+        run: |
+          git clone --depth=1 https://github.com/v2fly/geoip.git /tmp/geoip-tool
+
+      - name: Build geoip_shvetsov.dat
+        run: |
+          mkdir -p /tmp/output
+          cat > /tmp/geoip-config.yaml << EOF
+          input:
+            - type: text
+              action: add
+              args:
+                name: all
+                uri: $GITHUB_WORKSPACE/geoip/data/all.txt
+          output:
+            - type: v2rayGeoIPDat
+              action: output
+              args:
+                outputName: geoip_shvetsov.dat
+                outputDir: /tmp/output
+                wantedList:
+                  - all
+          EOF
+          cd /tmp/geoip-tool
+          go run ./ --config /tmp/geoip-config.yaml
+          ls -la /tmp/output
+
+      - name: Prepare package
+        run: |
+          mkdir -p dist
+          cp /tmp/output/geosite_shvetsov.dat dist/
+          cp /tmp/output/geoip_shvetsov.dat dist/
+          cp router/05_routing.json dist/
+          cp README.md dist/
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: xray-rule-assets
+          path: dist
