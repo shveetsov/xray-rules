@@ -5,7 +5,6 @@ oaistatic.com
 oaiusercontent.com
 openai.com
 sora.com
-sentinel.openai.com
 arkoselabs.com
 auth0.com
 awswaf.com
@@ -41,6 +40,7 @@ ftcdn.net
 
 meta.com
 facebook.com
+facebook.net
 fb.com
 fbcdn.net
 fbsbx.com
@@ -50,12 +50,6 @@ instagram.com
 cdninstagram.com
 whatsapp.com
 whatsapp.net
-accountcenter.meta.com
-connect.facebook.net
-graph.facebook.com
-lookaside.fbsbx.com
-m.me
-ig.me
 
 discord.com
 discord.gg
@@ -98,9 +92,6 @@ sharepointonline.com
 teams.microsoft.com
 teams.cloud.microsoft
 cloud.microsoft
-outlook.office.com
-outlook.office365.com
-outlook.cloud.microsoft
 skype.com
 live.com
 lync.com
@@ -129,27 +120,20 @@ lscr.io
 linuxserver.io
 
 figma.com
+figma.app
 figma.site
 
-themoviedb.org
-tmdb.org
-radarr.video
-sonarr.tv
-plex.tv
-tvdb2.plex.tv
-api.themoviedb.org
-image.tmdb.org
-api.radarr.video
-services.sonarr.tv
+netflix.com
 
-cloudfront.net
-s3.amazonaws.com
 stripe.com
 stripe.network
 stripecdn.com
+cloudfront.net
+s3.amazonaws.com
 statsig.com
 statsigapi.net
 sentry.io
+browser-intake-datadoghq.com
 intercom.io
 intercomcdn.com
 sendgrid.net
@@ -169,6 +153,9 @@ tradingview.com
 massgrave.dev
 v2rayu.org
 amnezia.org
+medium.com
+elastic.co
+bing.com
 aioseo.com
 elementor.com
 wpcode.com
@@ -183,6 +170,15 @@ dnsleaktest.com
 
 anidub.com
 kinohome.online
+plex.tv
+themoviedb.org
+tmdb.org
+radarr.video
+sonarr.tv
+phncdn.com
+pornhub.com
+trafficjunky.net
+
 nnmclub.to
 ntc.party
 rutor-search.info
@@ -212,15 +208,9 @@ antonkhoteev.com
 benheater.com
 blissos.org
 habrastorage.org
+histats.com
 intel.com
 lg.com
 lge.com
 lgappstv.com
 lgtvsdp.com
-lgtvonline.lge.com
-kz.lgtvsdp.com
-phncdn.com
-pornhub.com
-trafficjunky.net
-browser-intake-datadoghq.com
-histats.com
