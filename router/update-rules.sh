@@ -5,11 +5,13 @@
 
 REPO="shveetsov/xray-rules"
 BASE_URL="https://github.com/${REPO}/releases/latest/download"
-GEO_DIR="/opt/share/xray"
+GEO_DIR="/opt/etc/xray/dat"
 
 log() {
   echo "[update-rules] $1"
 }
+
+mkdir -p "${GEO_DIR}"
 
 log "Скачиваем geosite_shvetsov.dat..."
 curl -fsSL "${BASE_URL}/geosite_shvetsov.dat" -o "${GEO_DIR}/geosite_shvetsov.dat.tmp" \
