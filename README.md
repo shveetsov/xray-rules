@@ -4,54 +4,79 @@
 
 ## Структура
 
-- `geosite/data/all` — единый список доменов для сборки `geosite_shvetsov.dat`
-- `geoip/data/all.txt` — единый список IP/CIDR
-- `router/05_routing.json` — шаблон маршрутизации для XKeen
-- `.github/workflows/build.yml` — GitHub Actions для сборки артефактов
-- `.gitignore` — исключения для мусорных и локальных файлов
+| Файл | Назначение |
+|------|-----------|
+| `geosite/data/all` | Список доменов → `geosite_shvetsov.dat` |
+| `geoip/data/all.txt` | Список IP/CIDR → `geoip_shvetsov.dat` |
+| `router/05_routing.json` | Конфигурация маршрутизации XKeen |
+| `router/update-rules.sh` | Скрипт автообновления на роутере |
+| `.github/workflows/build.yml` | GitHub Actions: сборка и публикация |
 
-## Что сейчас собирается
+## Что собирается
 
-GitHub Actions собирает:
+При каждом push в `main` GitHub Actions автоматически:
 
-- `geosite_shvetsov.dat`
-- копию `geoip/data/all.txt`
-- `05_routing.json`
-- `README.md`
+1. Компилирует `geosite_shvetsov.dat` из `geosite/data/all`
+2. Компилирует `geoip_shvetsov.dat` из `geoip/data/all.txt`
+3. Публикует оба файла как **GitHub Release** с тегом `latest`
 
-## Что сейчас используется в routing
+Прямые ссылки для скачивания:
 
-В `05_routing.json` используются:
-
-- `ext:geosite_shvetsov.dat:all`
-- локально прописанные IP/CIDR из `geoip/data/all.txt`
-
-Это сделано специально, чтобы конфигурация не зависела от сторонних `geosite_*.dat` и `geoip_*.dat`.
-
-## Как обновлять роутер
-
-1. Скачать artifact из GitHub Actions
-2. Скопировать `geosite_shvetsov.dat` в каталог ресурсов Xray на роутере
-3. Заменить `05_routing.json`
-4. Перезапустить XKeen
-
-## Команды на роутере
-
-```sh
-xkeen -stop
-xkeen -start
+```
+https://github.com/shveetsov/xray-rules/releases/latest/download/geosite_shvetsov.dat
+https://github.com/shveetsov/xray-rules/releases/latest/download/geoip_shvetsov.dat
+https://github.com/shveetsov/xray-rules/releases/latest/download/05_routing.json
 ```
 
-или
+## Что используется в routing
+
+В `05_routing.json`:
+
+- `ext:geosite_shvetsov.dat:all` — домены для проксирования
+- `ext:geoip_shvetsov.dat:all` — IP/CIDR для проксирования
+
+## Автообновление на роутере
+
+### Первичная установка (один раз)
+
+```sh
+# Скопировать скрипт на роутер
+scp router/update-rules.sh root@192.168.1.1:/opt/etc/xray/update-rules.sh
+
+# Дать права на выполнение
+chmod +x /opt/etc/xray/update-rules.sh
+
+# Запустить вручную — проверить что всё работает
+/opt/etc/xray/update-rules.sh
+```
+
+### Автозапуск по расписанию (cron)
+
+```sh
+crontab -e
+```
+
+Добавить строку (обновление каждый день в 04:00):
+
+```
+0 4 * * * /opt/etc/xray/update-rules.sh >> /opt/var/log/update-rules.log 2>&1
+```
+
+### Ручное обновление
+
+```sh
+/opt/etc/xray/update-rules.sh
+```
+
+## Как обновить правила
+
+1. Отредактировать `geosite/data/all` или `geoip/data/all.txt`
+2. Сделать push в `main`
+3. GitHub Actions соберёт и опубликует новый Release
+4. Роутер подтянет обновление по cron в 04:00 (или запустить вручную)
+
+## Команды XKeen на роутере
 
 ```sh
 xkeen -restart
-```
-
-## Следующий этап
-
-Когда базовая схема стабильно заработает на всех роутерах, можно добавить сборку собственного `geoip_shvetsov.dat`, чтобы убрать IP/CIDR из `05_routing.json` и подключать их через:
-
-```json
-"ext:geoip_shvetsov.dat:all"
 ```
