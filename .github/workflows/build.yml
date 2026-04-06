@@ -96,7 +96,7 @@ jobs:
 
       - name: Generate release tag
         id: tag
-        run: echo "value=$(date -u +'%d%m%Y%H%M')" >> $GITHUB_OUTPUT
+        run: echo "value=$(date -u +'%Y%m%d%H%M')" >> $GITHUB_OUTPUT
 
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@v2

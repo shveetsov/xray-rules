@@ -32,7 +32,7 @@
       "sniffing": {
         "enabled": true,
         "routeOnly": false,
-        "destOverride": ["http", "tls"]
+        "destOverride": ["http", "tls", "quic"]
       }
     }
   ]
