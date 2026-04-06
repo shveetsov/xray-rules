@@ -94,11 +94,15 @@ jobs:
           name: xray-rule-assets
           path: dist
 
+      - name: Generate release tag
+        id: tag
+        run: echo "value=$(date -u +'%d%m%Y%H%M')" >> $GITHUB_OUTPUT
+
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: latest
-          name: "Latest build"
+          tag_name: ${{ steps.tag.outputs.value }}
+          name: ${{ steps.tag.outputs.value }}
           make_latest: true
           files: |
             dist/geosite_shvetsov.dat
