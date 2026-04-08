@@ -51,13 +51,13 @@ curl -fsSL https://raw.githubusercontent.com/shveetsov/xray-rules/main/router/up
 ### Автозапуск по расписанию (cron)
 
 ```sh
-crontab -e
+sudo crontab -e
 ```
 
 Добавить строку (обновление каждый день в 04:00):
 
 ```
-0 4 * * * /opt/etc/xray/update-rules.sh >> /opt/var/log/update-rules.log 2>&1
+0 3 * * * /opt/etc/xray/update-rules.sh >> /opt/var/log/update-rules.log 2>&1
 ```
 
 ### Ручное обновление

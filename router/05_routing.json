@@ -12,20 +12,6 @@
       {
         "type": "field",
         "inboundTag": ["redirect", "tproxy"],
-        "outboundTag": "block",
-        "domain": [
-          "ext:geosite_v2fly.dat:category-ads-all",
-          "google-analytics",
-          "analytics.yandex",
-          "appcenter.ms",
-          "app-measurement.com",
-          "firebase.io",
-          "crashlytics.com"
-        ]
-      },
-      {
-        "type": "field",
-        "inboundTag": ["redirect", "tproxy"],
         "outboundTag": "vless-reality",
         "network": "udp",
         "port": "50000-50030"
