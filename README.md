@@ -51,7 +51,8 @@ curl -fsSL https://raw.githubusercontent.com/shveetsov/xray-rules/main/router/up
 ### Автозапуск по расписанию (cron)
 
 ```sh
-sudo crontab -e
+opkg install nano
+VISUAL=nano EDITOR=nano crontab -e
 ```
 
 Добавить строку (обновление каждый день в 04:00):
