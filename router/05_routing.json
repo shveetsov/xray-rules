@@ -12,15 +12,40 @@
       {
         "type": "field",
         "inboundTag": ["redirect", "tproxy"],
-        "outboundTag": "vless-reality",
+        "outboundTag": "direct",
+        "ip": [
+          "127.0.0.0/8",
+          "10.0.0.0/8",
+          "172.16.0.0/12",
+          "192.168.0.0/16",
+          "169.254.0.0/16",
+          "185.70.184.34",
+          "193.247.81.203",
+          "138.124.7.51"
+        ]
+      },
+      {
+        "type": "field",
+        "inboundTag": ["redirect", "tproxy"],
+        "outboundTag": "block",
         "network": "udp",
-        "port": "50000-50030"
+        "port": "443"
       },
       {
         "type": "field",
         "inboundTag": ["redirect", "tproxy"],
         "outboundTag": "vless-reality",
+        "network": "tcp,udp",
         "domain": [
+          "ext:geosite_v2fly.dat:OPENAI",
+          "ext:geosite_v2fly.dat:YOUTUBE",
+          "ext:geosite_v2fly.dat:GOOGLE",
+          "ext:geosite_v2fly.dat:TELEGRAM",
+          "ext:geosite_v2fly.dat:DISCORD",
+          "ext:geosite_v2fly.dat:GITHUB",
+          "ext:geosite_v2fly.dat:TWITTER",
+          "ext:geosite_v2fly.dat:INSTAGRAM",
+          "ext:geosite_v2fly.dat:FACEBOOK",
           "ext:geosite_shvetsov.dat:all"
         ]
       },
@@ -28,20 +53,13 @@
         "type": "field",
         "inboundTag": ["redirect", "tproxy"],
         "outboundTag": "vless-reality",
+        "network": "tcp,udp",
         "ip": [
+          "ext:geoip_v2fly.dat:TELEGRAM",
+          "ext:geoip_v2fly.dat:GOOGLE",
+          "ext:geoip_v2fly.dat:FACEBOOK",
+          "ext:geoip_v2fly.dat:TWITTER",
           "ext:geoip_shvetsov.dat:all"
-        ]
-      },
-      {
-        "type": "field",
-        "inboundTag": ["redirect", "tproxy"],
-        "outboundTag": "direct",
-        "ip": [
-          "127.0.0.0/8",
-          "10.0.0.0/8",
-          "172.16.0.0/12",
-          "192.168.0.0/16",
-          "169.254.0.0/16"
         ]
       },
       {

@@ -2,7 +2,7 @@
   "inbounds": [
     {
       "tag": "redirect",
-      "listen": "::",
+      "listen": "0.0.0.0",
       "port": 61219,
       "protocol": "dokodemo-door",
       "settings": {
@@ -11,13 +11,13 @@
       },
       "sniffing": {
         "enabled": true,
-        "routeOnly": false,
+        "routeOnly": true,
         "destOverride": ["http", "tls"]
       }
     },
     {
       "tag": "tproxy",
-      "listen": "::",
+      "listen": "0.0.0.0",
       "port": 61219,
       "protocol": "dokodemo-door",
       "settings": {
@@ -31,8 +31,8 @@
       },
       "sniffing": {
         "enabled": true,
-        "routeOnly": false,
-        "destOverride": ["http", "tls", "quic"]
+        "routeOnly": true,
+        "destOverride": ["quic"]
       }
     }
   ]
