@@ -74,7 +74,7 @@ VISUAL=nano EDITOR=nano crontab -e
 3. GitHub Actions соберёт и опубликует новый Release
 4. Роутер подтянет обновление по cron в 04:00 (или запустить вручную)
 
-## Команды XKeen на роутере 
+## Команды XKeen на роутере
 
 ```sh
 xkeen -restart
