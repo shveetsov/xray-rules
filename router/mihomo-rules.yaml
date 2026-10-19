@@ -1,0 +1,70 @@
+# Дополнение к config.yaml с существующим proxy-provider subscription_1.
+# Установите GeoSite.dat и GeoIP.dat из релиза этого проекта.
+mode: rule
+geodata-mode: true
+geodata-loader: memconservative
+geo-auto-update: false
+
+sniffer:
+  enable: true
+  force-dns-mapping: true
+  parse-pure-ip: true
+  override-destination: false
+  sniff:
+    HTTP:
+      ports: [1-65535]
+    TLS:
+      ports: [1-65535]
+    QUIC:
+      ports: [1-65535]
+
+proxy-groups:
+  - name: AUTO
+    type: fallback
+    use: [subscription_1]
+    url: https://www.gstatic.com/generate_204
+    expected-status: 204
+    empty-fallback: REJECT
+
+rules:
+  - AND,((NETWORK,udp),(DST-PORT,135/137/138/139)),REJECT
+  - IP-CIDR,127.0.0.0/8,DIRECT,no-resolve
+  - IP-CIDR,10.0.0.0/8,DIRECT,no-resolve
+  - IP-CIDR,172.16.0.0/12,DIRECT,no-resolve
+  - IP-CIDR,192.168.0.0/16,DIRECT,no-resolve
+  - IP-CIDR,169.254.0.0/16,DIRECT,no-resolve
+  - AND,((NETWORK,udp),(DST-PORT,443)),REJECT
+
+  # REJECT после AUTO защищает от прямого выхода, если узел не поддерживает UDP.
+  - GEOSITE,v2fly-openai,AUTO
+  - GEOSITE,v2fly-openai,REJECT
+  - GEOSITE,v2fly-youtube,AUTO
+  - GEOSITE,v2fly-youtube,REJECT
+  - GEOSITE,v2fly-google,AUTO
+  - GEOSITE,v2fly-google,REJECT
+  - GEOSITE,v2fly-telegram,AUTO
+  - GEOSITE,v2fly-telegram,REJECT
+  - GEOSITE,v2fly-discord,AUTO
+  - GEOSITE,v2fly-discord,REJECT
+  - GEOSITE,v2fly-github,AUTO
+  - GEOSITE,v2fly-github,REJECT
+  - GEOSITE,v2fly-twitter,AUTO
+  - GEOSITE,v2fly-twitter,REJECT
+  - GEOSITE,v2fly-instagram,AUTO
+  - GEOSITE,v2fly-instagram,REJECT
+  - GEOSITE,v2fly-facebook,AUTO
+  - GEOSITE,v2fly-facebook,REJECT
+  - GEOSITE,shvetsov-all,AUTO
+  - GEOSITE,shvetsov-all,REJECT
+
+  - GEOIP,v2fly-telegram,AUTO
+  - GEOIP,v2fly-telegram,REJECT
+  - GEOIP,v2fly-google,AUTO
+  - GEOIP,v2fly-google,REJECT
+  - GEOIP,v2fly-facebook,AUTO
+  - GEOIP,v2fly-facebook,REJECT
+  - GEOIP,v2fly-twitter,AUTO
+  - GEOIP,v2fly-twitter,REJECT
+  - GEOIP,shvetsov-all,AUTO
+  - GEOIP,shvetsov-all,REJECT
+  - MATCH,DIRECT

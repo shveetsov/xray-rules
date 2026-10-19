@@ -1,0 +1,27 @@
+{
+  "sources": [
+    {
+      "name": "v2fly",
+      "geosite": "https://github.com/v2fly/domain-list-community/releases/latest/download/dlc.dat",
+      "geoip": "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat"
+    },
+    {
+      "name": "refilter",
+      "geosite": "https://github.com/1andrevich/Re-filter-lists/releases/latest/download/geosite.dat",
+      "geoip": "https://github.com/1andrevich/Re-filter-lists/releases/latest/download/geoip.dat"
+    },
+    {
+      "name": "zkeen",
+      "geosite": "https://github.com/jameszeroX/zkeen-domains/releases/latest/download/zkeen.dat",
+      "geoip": "https://github.com/jameszeroX/zkeen-ip/releases/latest/download/zkeenip.dat"
+    }
+  ],
+  "aliases": {
+    "geosite": {
+      "cn": "v2fly-cn"
+    },
+    "geoip": {
+      "cn": "v2fly-cn"
+    }
+  }
+}

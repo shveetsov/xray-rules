@@ -1,110 +1,67 @@
-name: Build Xray rule assets
+name: Build geodata for Mihomo and Xray
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: '17 15 * * *'
   push:
-    branches:
-      - main
-      - master
+    branches: [main, master]
     paths:
       - 'geosite/data/**'
       - 'geoip/data/**'
       - 'router/**'
+      - 'tools/**'
+      - 'tests/**'
+      - 'sources.json'
       - '.github/workflows/build.yml'
       - 'README.md'
+
+concurrency:
+  group: geodata-release
+  cancel-in-progress: false
 
 jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-
     steps:
-      - name: Checkout current repo
-        uses: actions/checkout@v4
-
-      - name: Setup Go
-        uses: actions/setup-go@v5
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
         with:
-          go-version: '1.22'
-
-      - name: Clone domain-list-community
-        run: |
-          git clone --depth=1 https://github.com/v2fly/domain-list-community.git /tmp/dlc
-
-      - name: Replace data files with custom lists
-        run: |
-          rm -rf /tmp/dlc/data/*
-          mkdir -p /tmp/dlc/data
-          cp geosite/data/* /tmp/dlc/data/
-
-      - name: Build geosite_shvetsov.dat
-        working-directory: /tmp/dlc
-        run: |
-          go run ./ --outputdir=/tmp/output
-          ls -la /tmp/output
-          cp /tmp/output/dlc.dat /tmp/output/geosite_shvetsov.dat
-
-      - name: Clone geoip tool
-        run: |
-          git clone --depth=1 https://github.com/v2fly/geoip.git /tmp/geoip-tool
-
-      - name: Build geoip_shvetsov.dat
-        run: |
-          mkdir -p /tmp/output
-          cat > /tmp/geoip-config.json << EOF
-          {
-            "input": [
-              {
-                "type": "text",
-                "action": "add",
-                "args": {
-                  "name": "all",
-                  "uri": "$GITHUB_WORKSPACE/geoip/data/all.txt"
-                }
-              }
-            ],
-            "output": [
-              {
-                "type": "v2rayGeoIPDat",
-                "action": "output",
-                "args": {
-                  "outputName": "geoip_shvetsov.dat",
-                  "outputDir": "/tmp/output"
-                }
-              }
-            ]
-          }
-          EOF
-          cd /tmp/geoip-tool
-          go run ./ -c /tmp/geoip-config.json
-          ls -la /tmp/output
-
-      - name: Prepare package
-        run: |
-          mkdir -p dist
-          cp /tmp/output/geosite_shvetsov.dat dist/
-          cp /tmp/output/geoip_shvetsov.dat dist/
-          cp router/05_routing.json dist/
-          cp README.md dist/
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
+          go-version: 'stable'
+          cache: false
+      - uses: actions/setup-python@v5
         with:
-          name: xray-rule-assets
-          path: dist
-
-      - name: Generate release tag
+          python-version: '3.12'
+      - name: Test merge and router update failures
+        run: python3 -m unittest discover -s tests -v
+      - name: Build custom and merged databases
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python3 tools/build.py
+      - name: Validate every category with Mihomo
+        run: |
+          curl -fLsS --retry 2 https://github.com/MetaCubeX/mihomo/releases/download/v1.19.32/mihomo-linux-amd64-v1.19.32.gz -o /tmp/mihomo.gz
+          gzip -d /tmp/mihomo.gz
+          chmod +x /tmp/mihomo
+          python3 tools/check_mihomo.py --binary /tmp/mihomo --dist dist
+      - uses: actions/upload-artifact@v4
+        with:
+          name: geodata-assets
+          path: dist/
+      - name: Release tag
         id: tag
-        run: echo "value=$(date -u +'%Y%m%d%H%M')" >> $GITHUB_OUTPUT
-
+        run: echo "value=$(date -u +'%Y%m%d%H%M%S')-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}" >> "$GITHUB_OUTPUT"
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.tag.outputs.value }}
-          name: ${{ steps.tag.outputs.value }}
+          name: Geodata ${{ steps.tag.outputs.value }}
           make_latest: true
-          files: |
-            dist/geosite_shvetsov.dat
-            dist/geoip_shvetsov.dat
-            dist/05_routing.json
+          body: |
+            GeoSite.dat и GeoIP.dat: V2Fly + Re:filter + ZKeen + shvetsov-all.
+            Категории и количество записей: categories.md. Источники и SHA-256: manifest.json.
+            Отдельные geosite_shvetsov.dat и geoip_shvetsov.dat сохранены для существующих Xray.
+          files: dist/*
+          fail_on_unmatched_files: true
